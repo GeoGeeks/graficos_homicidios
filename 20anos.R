@@ -5,12 +5,10 @@ library(tidyverse)
 library(shiny)
 library(DT)
 library(flexdashboard)
-library(plyr)
 library(reshape2)
 library(htmlwidgets)
 
 datos <- read_excel("data/IHME-GBD_DATA.xlsx")
-source("functions.R", encoding = "UTF-8")
 
 names(datos)
 muertesviolentas <- datos  %>% group_by_(.dots = list("measure_name",  "location_name", "year" )) %>%
@@ -271,9 +269,10 @@ allcountries <- data_frame(venezuela$Año, venezuela$Tasa, venezuela$Tasa_Venezu
 colnames( allcountries) <- c("Ano","Tasa_Promedio", "Venezuela", "Eritrea",  "Colombia",  "El_Salvador", "Iraq", "Siria" )
 
 dd = melt(allcountries, id=c("Ano"))
+colnames(dd) <- c("Año","País", "Tasa")
 
 
-p <- ggplot(data = dd) + geom_line(aes(x= Ano, y=value, colour = variable))  +
+p <- ggplot(data = dd) + geom_line(aes(x= Año, y=Tasa, colour = País))  +
   geom_ribbon(data= venezuela, aes(ymin=más_2_desv., ymax=más_3_desv., x=Año), alpha = 0.3 , fill = "red")+
   geom_ribbon(data= venezuela, aes(ymin=más_1_desv., ymax=más_2_desv., x=Año), alpha = 0.3, fill = "orange")+
   geom_ribbon(data= venezuela, aes(ymin=Tasa, ymax=más_1_desv., x=Año) ,alpha = 0.3, , fill = "yellow")+
@@ -282,11 +281,12 @@ p <- ggplot(data = dd) + geom_line(aes(x= Ano, y=value, colour = variable))  +
   theme(axis.text.x = element_text(face="bold", color="#993333", 
                                    size=10, angle=40),
         axis.text.y = element_text(face="bold", color="#993333", 
-                                   size=10, angle=40))+
+                                   size=10))+
   scale_x_discrete(name ="Año", 
                    limits= años) +
-  scale_y_discrete(name ="Tasa de Homicidios") +
-  labs(color = "País")
+  scale_y_continuous(name ="Tasa de muertes violentas", 
+                     breaks= seq(0, max(dd$Tasa), 50)) 
+
 p <- ggplotly(p)
 p
 

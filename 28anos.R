@@ -5,12 +5,10 @@ library(tidyverse)
 library(shiny)
 library(DT)
 library(flexdashboard)
-library(plyr)
 library(reshape2)
 library(htmlwidgets)
 
 datos <- read_excel("data/IHME-GBD_DATA.xlsx")
-source("functions.R", encoding = "UTF-8")
 
 names(datos)
 muertesviolentas <- datos  %>% group_by_(.dots = list("measure_name",  "location_name", "year" )) %>%

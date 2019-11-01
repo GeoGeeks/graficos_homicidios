@@ -5,7 +5,6 @@ library(tidyverse)
 library(shiny)
 library(DT)
 library(flexdashboard)
-library(plyr)
 library(reshape2)
 library(htmlwidgets)
 
@@ -233,8 +232,8 @@ colnames( afganistan) <- c("País", "Año", "Tasa", "Tasa_Afghanistan",  "más_3
 
 
 afganistan %>%
-  mutate(tsa.cmbio= (Tasa_Honduras - lag(Tasa_Honduras, na.pad = TRUE))/(lag(Tasa_Honduras, na.pad = TRUE)), dfrncia=
-           Tasa_Honduras - lag(Tasa_Honduras, na.pad = TRUE) , tsa.cmbio2 = ((-(-Tasa_Honduras + lead(Tasa_Honduras, na.pad = TRUE)))/Tasa_Honduras))
+  mutate(tsa.cmbio= (Tasa_Afghanistan - lag(Tasa_Afghanistan, na.pad = TRUE))/(lag(Tasa_Afghanistan, na.pad = TRUE)), dfrncia=
+           Tasa_Afghanistan - lag(Tasa_Afghanistan, na.pad = TRUE) , tsa.cmbio2 = ((-(-Tasa_Afghanistan + lead(Tasa_Afghanistan, na.pad = TRUE)))/Tasa_Afghanistan))
 
 
 
@@ -271,9 +270,10 @@ allcountries <- data_frame(venezuela$Año, venezuela$Tasa, venezuela$Tasa_Venezu
 colnames( allcountries) <- c("Ano","Tasa_Promedio", "Venezuela", "Afghanistan",  "Colombia",  "El_Salvador", "Iraq", "Siria" )
 
 dd = melt(allcountries, id=c("Ano"))
+colnames(dd) <- c("Año","País", "Tasa")
 
 
-    p <- ggplot(data = dd) + geom_line(aes(x= Ano, y=value, colour = variable))  +
+    p <- ggplot(data = dd) + geom_line(aes(x= Año, y=Tasa, colour = País))  +
       geom_ribbon(data= venezuela, aes(ymin=más_2_desv., ymax=más_3_desv., x=Año), alpha = 0.3 , fill = "red")+
       geom_ribbon(data= venezuela, aes(ymin=más_1_desv., ymax=más_2_desv., x=Año), alpha = 0.3, fill = "orange")+
       geom_ribbon(data= venezuela, aes(ymin=Tasa, ymax=más_1_desv., x=Año) ,alpha = 0.3, , fill = "yellow")+
@@ -285,8 +285,9 @@ dd = melt(allcountries, id=c("Ano"))
                                        size=10, angle=40))+
       scale_x_discrete(name ="Año", 
                        limits= años) +
-      scale_y_discrete(name ="Tasa de Homicidios") +
-      labs(color = "País")
+      scale_y_continuous(name ="Tasa de muertes violentas", 
+                       breaks= seq(0, max(dd$Tasa), 50)) 
+    
     p <- ggplotly(p)
  p
  
