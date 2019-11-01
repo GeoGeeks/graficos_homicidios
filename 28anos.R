@@ -236,9 +236,10 @@ allcountries <- data_frame(venezuela$Año, venezuela$Tasa, venezuela$Tasa_Venezu
 colnames( allcountries) <- c("Ano","Tasa_Promedio", "Venezuela", "Afghanistan",  "Colombia",  "El_Salvador", "Rwanda", "Siria" )
 
 dd = melt(allcountries, id=c("Ano"))
+colnames(dd) <- c("Año","País", "Tasa")
 
 
-p <- ggplot(data = dd) + geom_line(aes(x= Ano, y=value, colour = variable))  +
+p <- ggplot(data = dd) + geom_line(aes(x= Año, y=Tasa, colour = País))  +
   geom_ribbon(data= venezuela, aes(ymin=más_2_desv., ymax=más_3_desv., x=Año), alpha = 0.3 , fill = "red")+
   geom_ribbon(data= venezuela, aes(ymin=más_1_desv., ymax=más_2_desv., x=Año), alpha = 0.3, fill = "orange")+
   geom_ribbon(data= venezuela, aes(ymin=Tasa, ymax=más_1_desv., x=Año) ,alpha = 0.3, , fill = "yellow")+
@@ -249,11 +250,12 @@ p <- ggplot(data = dd) + geom_line(aes(x= Ano, y=value, colour = variable))  +
         axis.text.y = element_text(face="bold", color="#993333", 
                                    size=10, angle=40))+
   scale_x_discrete(name ="Año", 
-                   limits= años) +
-  scale_y_discrete(name ="Tasa de Homicidios") +
-  labs(color = "País")
+                   limits= años)+
+  scale_y_continuous(name ="Tasa de muertes violentas", 
+                     breaks= waiver()) 
+
 p <- ggplotly(p)
 p
 
 
-saveWidget(p, "Violencia_28_anos.html")
+saveWidget(p, "graphs/Violencia_28_anos.html")
