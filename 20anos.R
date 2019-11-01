@@ -277,7 +277,7 @@ p <- ggplot(data = dd) + geom_line(aes(x= Año, y=Tasa, colour = País))  +
   geom_ribbon(data= venezuela, aes(ymin=más_1_desv., ymax=más_2_desv., x=Año), alpha = 0.3, fill = "orange")+
   geom_ribbon(data= venezuela, aes(ymin=Tasa, ymax=más_1_desv., x=Año) ,alpha = 0.3, , fill = "yellow")+
   geom_ribbon(data= venezuela, aes(ymin=menos_1_desv., ymax=Tasa, x=Año), fill = "green" ,alpha = 0.3)+
-  ggtitle(paste0("Países con violencia crónica en los últimos 20 años")) +
+  ggtitle(paste0("Países con violencia crónica o aguda en los últimos 20 años")) +
   theme(axis.text.x = element_text(face="bold", color="#993333", 
                                    size=10, angle=40),
         axis.text.y = element_text(face="bold", color="#993333", 
@@ -285,10 +285,10 @@ p <- ggplot(data = dd) + geom_line(aes(x= Año, y=Tasa, colour = País))  +
   scale_x_discrete(name ="Año", 
                    limits= años) +
   scale_y_continuous(name ="Tasa de muertes violentas", 
-                     breaks= seq(0, max(dd$Tasa), 50)) 
+                     breaks= seq(0, max(dd$Tasa), 30)) 
 
 p <- ggplotly(p)
 p
 
 
-saveWidget(p, "graphs/Violencia_20_anos.html")
+saveWidget(p, "Violencia_20_anos.html")
